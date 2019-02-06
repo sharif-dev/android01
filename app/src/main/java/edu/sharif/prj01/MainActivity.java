@@ -11,9 +11,15 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import edu.sharif.prj01.producer_consumer.Buffer;
+import edu.sharif.prj01.producer_consumer.ConsumerRunnable;
+import edu.sharif.prj01.producer_consumer.ProducerRunnable;
+
+import static edu.sharif.prj01.producer_consumer.Buffer.DEFAULT_BUFFER_SIZE;
+
 public class MainActivity extends AppCompatActivity {
 
-    protected static final String TAG = "prj1-thread";
+    public static final String TAG = "prj1-thread";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +32,35 @@ public class MainActivity extends AppCompatActivity {
 //        LambdaRunnable();
 //        RaceCondition();
 //        SynchronizedThread();
-        ThreadSafeMethod();
+//        ThreadSafeMethod();
 //        ObjectMemberVariablesNotThreadSafe();
 //        ThreadLocalExampleMethod();
 //        ReentrantExampleMethod();
 //        WaitNotifyTest();
 //        ScheduledExecutorServiceMethod();
+        ProducerConsumerExample();
+    }
 
+    void ProducerConsumerExample() {
+        Buffer buffer = new Buffer(DEFAULT_BUFFER_SIZE);
+
+        Thread producer = new Thread(new ProducerRunnable(buffer));
+        Thread consumer = new Thread(new ConsumerRunnable(buffer));
+
+        producer.start();
+        consumer.start();
+
+        try {
+            producer.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            consumer.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     void ThreadSubclass() {
@@ -236,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(MainActivity.TAG, "WaitNotifyTest]>> end");
     }
 
-    void ScheduledExecutorServiceMethod(){
+    void ScheduledExecutorServiceMethod() {
         ScheduledExecutorService scheduledExecutorService =
                 Executors.newScheduledThreadPool(5);
 
