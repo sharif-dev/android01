@@ -39,6 +39,23 @@ public class MainActivity extends AppCompatActivity {
 //        WaitNotifyTest();
 //        ScheduledExecutorServiceMethod();
         ProducerConsumerExample();
+//        RockPaperScissor();
+    }
+
+    void RockPaperScissor() {
+        Player p1 = new Player();
+        Player p2 = new Player();
+
+        Game game = new Game(p1, p2);
+        game.start();
+        p1.start();
+        p2.start();
+
+        try {
+            game.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     void ProducerConsumerExample() {
