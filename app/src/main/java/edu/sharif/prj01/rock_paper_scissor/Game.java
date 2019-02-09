@@ -15,12 +15,10 @@ public class Game extends Thread {
             Log.i(MainActivity.TAG, "RockPaperScissor ]]>> p2: " + p2.getWeapon());
             try {
                 synchronized (p1) {
-                    p1.eraseWeapon();
                     p1.notify();
                     p1.wait();
                 }
                 synchronized (p2) {
-                    p2.eraseWeapon();
                     p2.notify();
                     p2.wait();
                 }

@@ -11,12 +11,6 @@ public class Player extends Thread {
         return weapon;
     }
 
-    public void eraseWeapon() {
-        synchronized (this) {
-            this.weapon = Weapon.NONE;
-        }
-    }
-
     @Override
     public void run() {
         while (true) {
