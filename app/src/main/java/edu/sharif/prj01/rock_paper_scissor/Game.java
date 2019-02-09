@@ -10,22 +10,32 @@ public class Game extends Thread {
     @Override
     public void run() {
         while (true) {
+            try {
+                while (p1.getWeapon().equals(Weapon.NONE)) {
+                    synchronized (p1) {
+                        p1.wait();
+                    }
+                }
+                while (p2.getWeapon().equals(Weapon.NONE)) {
+                    synchronized (p2) {
+                        p2.wait();
+                    }
+                }
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Log.i(MainActivity.TAG, "-------------------------------------------");
             Log.i(MainActivity.TAG, "RockPaperScissor ]]>> p1: " + p1.getWeapon());
             Log.i(MainActivity.TAG, "RockPaperScissor ]]>> p2: " + p2.getWeapon());
-            try {
-                synchronized (p1) {
-                    p1.notify();
-                    p1.wait();
-                }
-                synchronized (p2) {
-                    p2.notify();
-                    p2.wait();
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            synchronized (p1) {
+                p1.eraseWeapon();
+                p1.notify();
             }
-
+            synchronized (p2) {
+                p2.eraseWeapon();
+                p2.notify();
+            }
         }
     }
 }
