@@ -11,11 +11,6 @@ public class Game extends Thread {
     public void run() {
         while (true) {
             try {
-                while (p1 == null || p2 == null) {
-                    synchronized (this) {
-                        wait();
-                    }
-                }
                 while (p1.getWeapon().equals(Weapon.NONE)) {
                     synchronized (p1) {
                         p1.wait();

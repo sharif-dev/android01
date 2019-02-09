@@ -20,21 +20,19 @@ public class Player extends Thread {
     @Override
     public void run() {
         while (true) {
-            while (!weapon.equals(Weapon.NONE)) {
-                try {
-                    synchronized (this) {
-                        this.wait();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
             try {
                 Thread.sleep(new Random().nextInt(1000) + 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             move();
+            try {
+                synchronized (this) {
+                    this.wait();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
