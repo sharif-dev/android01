@@ -4,7 +4,7 @@ public class Player extends Thread {
     private Weapon weapon;
 
     public Player() {
-        this.eraseWeapon();
+        move();
     }
 
     public Weapon getWeapon() {
