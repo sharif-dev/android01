@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        ThreadSubclass();
+        ThreadSubclass();
 //        ThreadRunnable();
 //        AnonymousRunnable();
 //        LambdaRunnable();
@@ -128,8 +128,18 @@ public class MainActivity extends AppCompatActivity {
                 " id: " + Thread.currentThread().getId());
     }
 
+    /**
+     * The reason race condition happens is that two threads starting to run same method,
+     * and the method changes the one specific resource (it could be variable, array, file or anything like that)
+     * each thread before acting on the resource checks the value of that
+     * then acts on it // if (x == 5) {x = x + 1} <- wrote x as Lvalue
+     * so if first thread checks value for acting a specific action // if (x == 5) {x = 5 + 1}
+     * then immediately(possibly) second thread checks for value // if (x == 5) {x = 5 + 1 }
+     * in this moment each thread consider the exact same value and will act exactly same action
+     * so in above example x increases once instead of twice
+     */
     void RaceCondition() {
-        Counter c = new Counter();
+        Counter c = new Counter(); // Shared resource between threads
 
         Thread thread1 = new Thread(() -> c.doWork());
         Thread thread2 = new Thread(() -> c.doWork());
@@ -178,9 +188,9 @@ public class MainActivity extends AppCompatActivity {
                 " count: " + c.count);
     }
 
-    void ThreadSafeMethod() {
+    void ThreadSafeMethod() { // in this example threads act safe because there is no shared resource
         ThreadSafe threadSafe = new ThreadSafe();
-        threadSafe.LocalObjectReferences();
+        threadSafe.localObjectReferences();
     }
 
     void ObjectMemberVariablesNotThreadSafe() {
@@ -241,8 +251,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void WaitNotifyTest() {
-        // intialising count down latch by 2,
-        // as it will wait for 2 threads to finish execution
+        // initialising count down latch by 2, if we want to use notify in waiter class
+        // or by 3, if we want use notifyAll in waiter class
+        // as it will wait for 2 threads (or 3 depends on parameter) to countDown it until zero
         final CountDownLatch latch = new CountDownLatch(2);
 
         Message msg = new Message("process it");
@@ -257,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(notifier, "notifier1").start();
 
         try {
-            latch.await();
+            latch.await(); // stops the current thread (main thread) until other threads countDown it
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

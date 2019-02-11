@@ -4,7 +4,7 @@ import android.util.Log;
 
 public class ThreadSafe {
 
-    public void LocalVariables(){
+    public void LocalVariables(){ // example of primitive type local variable
         long threadSafeInt = 0;
         threadSafeInt++;
     }
@@ -24,7 +24,7 @@ public class ThreadSafe {
     //
     // The only exception is of course, if one of the methods called with the LocalObject as
     // parameter, stores the LocalObject instance in a way that allows access to it from other threads.
-    public void LocalObjectReferences(){
+    public void localObjectReferences(){ // example of class type local object
         LocalObject localObject = new LocalObject();
         method2(localObject);
         Log.i(MainActivity.TAG, "val:" + localObject.getVal());
