@@ -1,9 +1,22 @@
+package edu.sharif.prj01.rock_paper_scissor;
+
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+
+import edu.sharif.prj01.rock_paper_scissor.Msg;
+import edu.sharif.prj01.rock_paper_scissor.Task;
 
 public class Player extends Thread {
     private Weapon weapon;
+    private CountDownLatch latch = null;
+    private Msg msg;
 
-    public Player() {
+    public void setLatch(CountDownLatch latch) {
+        this.latch = latch;
+    }
+
+    public Player(Msg msg) {
+        this.msg = msg;
         this.eraseWeapon();
     }
 
@@ -20,10 +33,10 @@ public class Player extends Thread {
     @Override
     public void run() {
         while (true) {
-            while (!weapon.equals(Weapon.NONE)) {
+            while(!msg.getTask().equals(Task.PLAY)) {
                 try {
-                    synchronized (this) {
-                        this.wait();
+                    synchronized (msg) {
+                        msg.wait();
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -34,7 +47,14 @@ public class Player extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            move();
+            synchronized (msg) {
+                move();
+                try {
+                    msg.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -53,7 +73,7 @@ public class Player extends Thread {
                     weapon = Weapon.SCISSOR;
                     break;
             }
-            this.notify();
+            latch.countDown();
         }
     }
 }
