@@ -7,7 +7,7 @@ import java.util.concurrent.CountDownLatch;
 public class Waiter implements Runnable {
 
     private Message msg;
-    final CountDownLatch latch;
+    private final CountDownLatch latch;
 
     public Waiter(Message m, CountDownLatch latch) {
         this.msg = m;
