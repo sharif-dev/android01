@@ -14,6 +14,9 @@ import java.util.concurrent.TimeUnit;
 import edu.sharif.prj01.producer_consumer.Buffer;
 import edu.sharif.prj01.producer_consumer.ConsumerRunnable;
 import edu.sharif.prj01.producer_consumer.ProducerRunnable;
+import edu.sharif.prj01.rock_paper_scissor.Game;
+import edu.sharif.prj01.rock_paper_scissor.Msg;
+import edu.sharif.prj01.rock_paper_scissor.Player;
 
 import static edu.sharif.prj01.producer_consumer.Buffer.DEFAULT_BUFFER_SIZE;
 
@@ -38,7 +41,25 @@ public class MainActivity extends AppCompatActivity {
 //        ReentrantExampleMethod();
 //        WaitNotifyTest();
 //        ScheduledExecutorServiceMethod();
-        ProducerConsumerExample();
+//        ProducerConsumerExample();
+        RockPaperScissor();
+    }
+
+    void RockPaperScissor() {
+        Msg msg = new Msg();
+        Player p1 = new Player(msg);
+        Player p2 = new Player(msg);
+
+        Game game = new Game(p1, p2, msg);
+        game.start();
+        p1.start();
+        p2.start();
+
+        try {
+            game.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     void ProducerConsumerExample() {
