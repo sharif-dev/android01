@@ -22,8 +22,8 @@ public class Notifier implements Runnable {
             Thread.sleep(1000);
             synchronized (msg) {
                 msg.setMsg(name+" Notifier work done");
-                msg.notify();
-                // msg.notifyAll();
+                msg.notify(); // at the moment we have 2 wait(), so if we call notify , it doesn't notify one of waiters (randomly), so it doesn't wake up ever
+                // msg.notifyAll(); // this will wake up both of waiters, or as many as there is
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

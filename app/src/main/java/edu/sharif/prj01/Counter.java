@@ -9,8 +9,8 @@ public class Counter {
         }
     }
 
-    public void safeDoWork(){
-        synchronized(this){
+    public void safeDoWork(){ // preventing race condition with following two synchronized blocks
+        synchronized(this){ // you can put in parenthesis any object that you want to put a lock for the thread (that you want to work lonely) on it until it's work done
             for (int i = 0; i<100000;i++){
                 this.count = this.count + 1;
             }
