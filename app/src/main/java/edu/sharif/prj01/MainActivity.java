@@ -1,5 +1,7 @@
 package edu.sharif.prj01;
 
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,8 +43,37 @@ public class MainActivity extends AppCompatActivity {
 //        ReentrantExampleMethod();
 //        WaitNotifyTest();
 //        ScheduledExecutorServiceMethod();
-//        ProducerConsumerExample();
-        RockPaperScissor();
+        ProducerConsumerExample();
+//        RockPaperScissor();
+//        javaThreadHandler();
+//        androidThreadHandler();
+    }
+
+    private void androidThreadHandler() {
+        HandlerThread handlerThread = new HandlerThread("handlerThread");
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("HandlerThread", "Runnable is running");
+            }
+        });
+    }
+
+    public void javaThreadHandler() {
+        T t = new T();
+        t.start();
+        while(t.handler == null) {
+            synchronized (t) {
+                try {
+                    t.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        t.handler.sendMessage(new android.os.Message());
     }
 
     void RockPaperScissor() {
