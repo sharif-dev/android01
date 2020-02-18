@@ -4,6 +4,8 @@
 
 This android project contains the source code of the examples of the first section of the android programming course. [slide-01](./slide/android-01.pdf)
 
+For further study on threads and concurrency in java view [this](./further-study). (From [javacup tranining](https://javacup.ir/javacup-training-videos/))
+
 ## Contents
 
 - Builder Pattern
