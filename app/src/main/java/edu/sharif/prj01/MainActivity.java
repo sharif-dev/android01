@@ -14,9 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-//
-//import edu.sharif.prj01.even_odd_numbers.Printer;
-//import edu.sharif.prj01.even_odd_numbers.TaskEvenOdd;
+
 import edu.sharif.prj01.producer_consumer.Buffer;
 import edu.sharif.prj01.producer_consumer.ConsumerRunnable;
 import edu.sharif.prj01.producer_consumer.ProducerRunnable;
@@ -83,8 +81,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         threadEven.start();
-//        ===========
-
 
         try {
             threadOdd.join();
@@ -98,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-//        Log.i(MainActivity.TAG, "EvenOdd  finished task!]]>> " );
     }
 
     private void busyWaiting() {
