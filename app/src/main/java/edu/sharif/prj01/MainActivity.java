@@ -2,7 +2,9 @@ package edu.sharif.prj01;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.util.Log;
 
@@ -31,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ThreadSubclass();
+//        ThreadSubclass();
 //        ThreadRunnable();
-//        AnonymousRunnable();
+        AnonymousRunnable();
 //        LambdaRunnable();
 //        RaceCondition();
 //        SynchronizedThread();
@@ -43,10 +45,104 @@ public class MainActivity extends AppCompatActivity {
 //        ReentrantExampleMethod();
 //        WaitNotifyTest();
 //        ScheduledExecutorServiceMethod();
-        ProducerConsumerExample();
+//        ProducerConsumerExample();
 //        RockPaperScissor();
 //        javaThreadHandler();
 //        androidThreadHandler();
+//        busyWaiting();
+        evenOdd();
+
+    }
+
+    private void evenOdd() {
+        EvenOddPrinter evenOddPrinter = new EvenOddPrinter();
+        Thread threadOdd = new Thread(new Runnable() {
+            public void run() {
+                int number = 1;
+                while (number <= 10) {
+                    evenOddPrinter.printOdd(number);
+
+                    number += 2;
+                }
+
+            }
+        });
+        threadOdd.start();
+
+        Thread threadEven = new Thread(new Runnable() {
+            public void run() {
+                int number = 2;
+                while (number <= 10) {
+                    evenOddPrinter.printEven(number);
+
+                    number += 2;
+                }
+
+            }
+        });
+        threadEven.start();
+
+        try {
+            threadOdd.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            threadEven.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void busyWaiting() {
+        BusyWaitSignal sharedSignal = new BusyWaitSignal();
+        Thread readerThread = new Thread(new Runnable() {
+            public void run() {
+                while (sharedSignal.hasDataToProcess()) {
+                    Log.i(MainActivity.TAG, "Busy Waiting ]]>> " +
+
+                            " id: " + Thread.currentThread().getId()
+                            + " is waiting"
+                    );
+                }
+//                doing its job
+
+            }
+        });
+        readerThread.start();
+
+        Thread writerThread = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    sharedSignal.setHasDataToProcess(false);
+                    Log.i(MainActivity.TAG, "Busy Waiting ]]>> " +
+
+                            " id: " + Thread.currentThread().getId()
+                            + " finished the job"
+                    );
+                }
+
+            }
+        });
+        writerThread.start();
+
+        try {
+            readerThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            writerThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void androidThreadHandler() {
@@ -64,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
     public void javaThreadHandler() {
         T t = new T();
         t.start();
-        while(t.handler == null) {
+        while (t.handler == null) {
             synchronized (t) {
                 try {
                     t.wait();
@@ -264,6 +360,34 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.i(MainActivity.TAG, "ObjectMemberVariablesNotThreadSafe]]>>" +
                 sharedInstance.builder.toString());
+
+//        check for static members
+        NotThreadSafe instance1 = new NotThreadSafe();
+        NotThreadSafe instance2 = new NotThreadSafe();
+
+        Thread t3 = new Thread(new NotThreadSafe.MyRunnablePrime(instance1));
+        Thread t4 = new Thread(new NotThreadSafe.MyRunnablePrime(instance2));
+        t3.start();
+        t4.start();
+        try {
+            t3.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            t4.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Log.i(MainActivity.TAG, "ObjectMemberVariablesNotThreadSafeToCheckStaticMembers]]>>" +
+                " first instance static builder: " +
+                instance1.staticBuilder.toString() +
+                " second instance static builder: " +
+                instance2.staticBuilder.toString()
+
+        );
+
+
     }
 
     void ThreadLocalExampleMethod() {
