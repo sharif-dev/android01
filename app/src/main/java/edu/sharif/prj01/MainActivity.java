@@ -31,19 +31,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ThreadSubclass();
+//        ThreadSubclass();
 //        ThreadRunnable();
 //        AnonymousRunnable();
 //        LambdaRunnable();
 //        RaceCondition();
 //        SynchronizedThread();
 //        ThreadSafeMethod();
-//        ObjectMemberVariablesNotThreadSafe();
+        ObjectMemberVariablesNotThreadSafe();
 //        ThreadLocalExampleMethod();
 //        ReentrantExampleMethod();
 //        WaitNotifyTest();
 //        ScheduledExecutorServiceMethod();
-        ProducerConsumerExample();
+//        ProducerConsumerExample();
 //        RockPaperScissor();
 //        javaThreadHandler();
 //        androidThreadHandler();
@@ -264,6 +264,34 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.i(MainActivity.TAG, "ObjectMemberVariablesNotThreadSafe]]>>" +
                 sharedInstance.builder.toString());
+
+//        check for static members
+        NotThreadSafe instance1 = new NotThreadSafe();
+        NotThreadSafe instance2 = new NotThreadSafe();
+
+        Thread t3 = new Thread(new NotThreadSafe.MyRunnablePrime(instance1));
+        Thread t4 = new Thread(new NotThreadSafe.MyRunnablePrime(instance2));
+        t3.start();
+        t4.start();
+        try {
+            t3.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            t4.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Log.i(MainActivity.TAG, "ObjectMemberVariablesNotThreadSafeToCheckStaticMembers]]>>" +
+                " first instance static builder: " +
+                instance1.staticBuilder.toString() +
+                " second instance static builder: "+
+                instance2.staticBuilder.toString()
+
+        );
+
+
     }
 
     void ThreadLocalExampleMethod() {

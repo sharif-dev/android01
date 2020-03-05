@@ -1,8 +1,8 @@
 package edu.sharif.prj01;
 
 public class NotThreadSafe{
-    StringBuilder builder = new StringBuilder();
     static StringBuilder staticBuilder = new StringBuilder();
+    StringBuilder builder = new StringBuilder();
 
 
     public void add(String text){
