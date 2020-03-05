@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ThreadSubclass();
+//        ThreadSubclass();
 //        ThreadRunnable();
-//        AnonymousRunnable();
+        AnonymousRunnable();
 //        LambdaRunnable();
 //        RaceCondition();
 //        SynchronizedThread();
