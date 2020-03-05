@@ -47,6 +47,57 @@ public class MainActivity extends AppCompatActivity {
 //        RockPaperScissor();
 //        javaThreadHandler();
 //        androidThreadHandler();
+        busyWaiting();
+    }
+
+    private void busyWaiting(){
+        BusyWaitSignal sharedSignal = new BusyWaitSignal();
+        Thread readerThread = new Thread(new Runnable() {
+            public void run() {
+                while(sharedSignal.hasDataToProcess()){
+                    Log.i(MainActivity.TAG, "Busy Waiting ]]>> " +
+
+                            " id: " + Thread.currentThread().getId()
+                            + " is waiting"
+                    );
+                }
+//                doing its job
+
+            }
+        });
+        readerThread.start();
+
+        Thread writerThread = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                finally {
+                    sharedSignal.setHasDataToProcess(false);
+                    Log.i(MainActivity.TAG, "Busy Waiting ]]>> " +
+
+                            " id: " + Thread.currentThread().getId()
+                            + " finished the job"
+                    );
+                }
+
+            }
+        });
+        writerThread.start();
+
+        try {
+            readerThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            writerThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void androidThreadHandler() {
