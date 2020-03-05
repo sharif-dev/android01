@@ -2,7 +2,9 @@ package edu.sharif.prj01;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.util.Log;
 
@@ -12,7 +14,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
+//
+//import edu.sharif.prj01.even_odd_numbers.Printer;
+//import edu.sharif.prj01.even_odd_numbers.TaskEvenOdd;
 import edu.sharif.prj01.producer_consumer.Buffer;
 import edu.sharif.prj01.producer_consumer.ConsumerRunnable;
 import edu.sharif.prj01.producer_consumer.ProducerRunnable;
@@ -38,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 //        RaceCondition();
 //        SynchronizedThread();
 //        ThreadSafeMethod();
-        ObjectMemberVariablesNotThreadSafe();
+//        ObjectMemberVariablesNotThreadSafe();
 //        ThreadLocalExampleMethod();
 //        ReentrantExampleMethod();
 //        WaitNotifyTest();
@@ -47,14 +51,61 @@ public class MainActivity extends AppCompatActivity {
 //        RockPaperScissor();
 //        javaThreadHandler();
 //        androidThreadHandler();
-        busyWaiting();
+//        busyWaiting();
+        evenOdd();
+
     }
 
-    private void busyWaiting(){
+    private void evenOdd() {
+        EvenOddPrinter evenOddPrinter = new EvenOddPrinter();
+        Thread threadOdd = new Thread(new Runnable() {
+            public void run() {
+                int number = 1;
+                while (number <= 10) {
+                    evenOddPrinter.printOdd(number);
+
+                    number += 2;
+                }
+
+            }
+        });
+        threadOdd.start();
+
+        Thread threadEven = new Thread(new Runnable() {
+            public void run() {
+                int number = 2;
+                while (number <= 10) {
+                    evenOddPrinter.printEven(number);
+
+                    number += 2;
+                }
+
+            }
+        });
+        threadEven.start();
+//        ===========
+
+
+        try {
+            threadOdd.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            threadEven.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+//        Log.i(MainActivity.TAG, "EvenOdd  finished task!]]>> " );
+    }
+
+    private void busyWaiting() {
         BusyWaitSignal sharedSignal = new BusyWaitSignal();
         Thread readerThread = new Thread(new Runnable() {
             public void run() {
-                while(sharedSignal.hasDataToProcess()){
+                while (sharedSignal.hasDataToProcess()) {
                     Log.i(MainActivity.TAG, "Busy Waiting ]]>> " +
 
                             " id: " + Thread.currentThread().getId()
@@ -73,8 +124,7 @@ public class MainActivity extends AppCompatActivity {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
-                finally {
+                } finally {
                     sharedSignal.setHasDataToProcess(false);
                     Log.i(MainActivity.TAG, "Busy Waiting ]]>> " +
 
@@ -115,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     public void javaThreadHandler() {
         T t = new T();
         t.start();
-        while(t.handler == null) {
+        while (t.handler == null) {
             synchronized (t) {
                 try {
                     t.wait();
@@ -337,7 +387,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(MainActivity.TAG, "ObjectMemberVariablesNotThreadSafeToCheckStaticMembers]]>>" +
                 " first instance static builder: " +
                 instance1.staticBuilder.toString() +
-                " second instance static builder: "+
+                " second instance static builder: " +
                 instance2.staticBuilder.toString()
 
         );
